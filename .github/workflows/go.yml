@@ -1,15 +1,21 @@
 name: Go
 
 on:
-  push:
-    branches: [ Aula_4 ]
-  pull_request:
-    branches: [ Aula_4 ]
+  #push:
+    #branches: [ Aula_4 ]
+  #pull_request:
+    #branches: [ Aula_4 ]
+  workflow_dispatch:
 
 jobs:
 
   test:
-    runs-on: ubuntu-latest
+    name: Test on node ${{ matrix.go_version }} and ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        go_version: ['1.22.2', '1.21.9']
+        os: [ubuntu-22.04, ubuntu-20.04]
     steps:
     - uses: actions/checkout@v3
 
@@ -30,7 +36,8 @@ jobs:
   
   build:
     needs: test
-    runs-on: ubuntu-latest
+    name: Build on Ubuntu 22.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - name: Build
